@@ -42,6 +42,14 @@ public class EmployeeService {
         }).orElse(null);
     }
 
+    public Employee setDepartment(int employeeId, int departmentId){
+        Optional<Employee> e = repository.findById(employeeId);
+        return e.map( emp -> {
+            emp.setDepartment(ds.findById(departmentId));
+            return update(employeeId, emp);
+        }).orElse(null);
+    }
+
 
     public Employee update(int employeeId, Employee info){
         Optional<Employee> e = repository.findById(employeeId);

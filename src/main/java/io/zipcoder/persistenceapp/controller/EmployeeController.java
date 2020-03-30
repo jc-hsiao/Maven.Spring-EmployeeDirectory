@@ -38,6 +38,11 @@ public class EmployeeController {
         return new ResponseEntity<>(service.setManager(id, manager), HttpStatus.CREATED );
     }
 
+    @PutMapping( "/setDepartment/{id}/{deptId}" )
+    ResponseEntity<Employee> setManager(@PathVariable int id, @PathVariable int deptId){
+        return new ResponseEntity<>(service.setDepartment(id, deptId), HttpStatus.CREATED );
+    }
+
     @PutMapping( "/{id}" )
     ResponseEntity<Employee> update(@PathVariable int id, @RequestBody Employee info){
         return new ResponseEntity<>(service.update(id, info), HttpStatus.OK );

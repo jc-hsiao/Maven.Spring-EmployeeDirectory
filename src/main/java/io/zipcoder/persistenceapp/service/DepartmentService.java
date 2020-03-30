@@ -11,10 +11,12 @@ import java.util.Optional;
 @Service
 public class DepartmentService {
     DepartmentRepository repository;
+    EmployeeService es;
 
     @Autowired
-    public DepartmentService( DepartmentRepository repository){
+    public DepartmentService( DepartmentRepository repository, EmployeeService es){
         this.repository = repository;
+        this.es = es;
     }
 
     public Department findById(int id){
@@ -25,8 +27,8 @@ public class DepartmentService {
         return repository.findAll();
     }
 
-    public void create(Department d){
-        repository.save(d);
+    public Department create(Department d){
+        return repository.save(d);
     }
 
     public Department update(int departmentId, Department info){
@@ -47,8 +49,9 @@ public class DepartmentService {
     }
 
 
-    public Department setManager(int departmentId, Employee manager){
+    public Department setManager(int departmentId, int managerId){
         Optional<Department> p = repository.findById(departmentId);
+        Employee manager = es.findById(managerId);
         return p.map(department -> {
             department.setManager(manager);
             repository.save(department);
