@@ -13,10 +13,12 @@ import java.util.Optional;
 @Service
 public class EmployeeService {
     EmployeeRepository repository;
+    DepartmentService ds;
 
     @Autowired
-    public EmployeeService( EmployeeRepository repository ){
+    public EmployeeService( EmployeeRepository repository, DepartmentService ds){
         this.repository = repository;
+        this.ds = ds;
     }
 
     public Employee findById(int id){
@@ -67,59 +69,72 @@ public class EmployeeService {
 //        }).orElse(false);
 //    }
 
-    public List<Employee> getEmployeesByManager(Employee manager){
-        return repository.findEmployeesByManager( manager );
+    public List<Employee> getEmployeesByManager(int managerId){
+        return repository.findEmployeesByManagerId( managerId );
     }
 
     public List<Employee> getEmployeesWithoutManager(){
         return repository.findEmployeesByManagerIsNull();
     }
 
-    public List<Employee> getEmployeeByDepartment(Department department){
-        return repository.findEmployeesByDepartment( department );
+    public List<Employee> getEmployeesByDepartmentId(int deptId){
+        return repository.findEmployeesByDepartmentId( deptId );
     }
 
-    public int removeEmployeesByDept(Department department){
-        return repository.removeEmployeeByDepartment(department);
+    public int removeEmployeesByDept(int deptId){
+        return repository.removeEmployeeByDepartmentId(deptId);
     }
 
-    public Employee findManagerByEmp( Employee employee ){
-        return  employee.getManager();
+    public Employee findManagerByEmpId( int employeeId ){
+        return  findById(employeeId).getManager();
     }
 
-    public List<Employee> getManagerHierarchy ( Employee employee ) {
+    public List<Employee> getManagerHierarchy ( int employeeId ) {
         List<Employee> l = new ArrayList<>();
-        Employee manager = findManagerByEmp(employee);
+        Employee manager = findManagerByEmpId(employeeId);
         while(manager != null){
             l.add(manager);
-            manager = findManagerByEmp(manager);
+            manager = findManagerByEmpId(manager.getId());
         }
         return l;
     }
 
-    public List<Employee> getAllReportEmp( Employee manager ){
-        List<Employee> result = new ArrayList<>(getEmployeesByManager(manager));
+    public List<Employee> getAllReportEmp(int managerId ){
+        List<Employee> result = new ArrayList<>(getEmployeesByManager(managerId));
         for (int i = 0; i < result.size(); i++) {
-            result.addAll(getAllReportEmp(result.get(i)));
+            result.addAll(getAllReportEmp(result.get(i).getId()));
         }
         return result;
     }
 
-    public int removeAllEmployeesByManager(Employee manager){
-        List<Employee> list = getAllReportEmp(manager);
+    public int removeAllEmployeesByManagerId(int managerId){
+        List<Employee> list = getAllReportEmp(managerId);
         return removeMultipleEmployees(list);
     }
 
-    public int removeDirectReport(Employee manager){
-        List<Employee> list = getEmployeesByManager(manager);
+    public int removeDirectReportId(int managerId){
+        List<Employee> list = getEmployeesByManager(managerId);
         List<Employee> listOfBottomEmp = new ArrayList<>();
         for(Employee e :list){
-            listOfBottomEmp.addAll( getEmployeesByManager(e) );
+            listOfBottomEmp.addAll( getEmployeesByManager(e.getId()) );
         }
         for(Employee e :listOfBottomEmp){
-            setManager( e.getId(), manager );
+            setManager( e.getId(), findById(managerId) );
         }
         return removeMultipleEmployees(list);
+    }
+
+    public int mergeDept(int d1Id, int d2Id){
+        Department d1 = ds.findById(d1Id);
+        Department d2 = ds.findById(d2Id);
+        setManager(d2.getManager().getId(),d1.getManager());
+        List<Employee> l = getEmployeesByDepartmentId(d2.getId());
+        for(Employee e:l){
+            e.setDepartment(d1);
+            update(e.getId(),e);
+        }
+        ds.delete(d2.getId());
+        return l.size();
     }
 
 

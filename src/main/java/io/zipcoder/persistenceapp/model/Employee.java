@@ -79,11 +79,11 @@ public class Employee {
         this.manager = manager;
     }
 
-    public Department getDepartmentNumber() {
+    public Department getDepartment() {
         return department;
     }
 
-    public void setDepartmentNumber(Department department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 

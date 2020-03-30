@@ -9,9 +9,9 @@ import java.util.List;
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee,Integer> {
 
-    List<Employee> findEmployeesByManager(Employee manager);
+    List<Employee> findEmployeesByManagerId(int id);
     List<Employee> findEmployeesByManagerIsNull();
-    List<Employee> findEmployeesByDepartment(Department department);
+    List<Employee> findEmployeesByDepartmentId(int departmentId);
     boolean removeEmployeeById(int id);
-    int removeEmployeeByDepartment( Department department);
+    int removeEmployeeByDepartmentId(int departmentId);
 }
