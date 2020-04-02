@@ -69,13 +69,13 @@ public class EmployeeService {
         return list.size();
     }
 
-//    public boolean delete(int employeeId){
-//        Optional<Employee> e = repository.findById(employeeId);
-//        return e.map( emp -> {
-//            repository.delete(emp);
-//            return true;
-//        }).orElse(false);
-//    }
+    public boolean delete(int employeeId){
+        Optional<Employee> e = repository.findById(employeeId);
+        return e.map( emp -> {
+            repository.delete(emp);
+            return true;
+        }).orElse(false);
+    }
 
     public List<Employee> getEmployeesByManager(int managerId){
         return repository.findEmployeesByManagerId( managerId );

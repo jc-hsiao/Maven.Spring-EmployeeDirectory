@@ -11,12 +11,12 @@ import java.util.Optional;
 @Service
 public class DepartmentService {
     DepartmentRepository repository;
-    EmployeeService es;
+//    EmployeeService es;
 
     @Autowired
-    public DepartmentService( DepartmentRepository repository, EmployeeService es){
+    public DepartmentService( DepartmentRepository repository){
         this.repository = repository;
-        this.es = es;
+//        this.es = es;
     }
 
     public Department findById(int id){
@@ -49,15 +49,15 @@ public class DepartmentService {
     }
 
 
-    public Department setManager(int departmentId, int managerId){
-        Optional<Department> p = repository.findById(departmentId);
-        Employee manager = es.findById(managerId);
-        return p.map(department -> {
-            department.setManager(manager);
-            repository.save(department);
-            return department;
-        }).orElse(null);
-    }
+//    public Department setManager(int departmentId, int managerId){
+//        Optional<Department> p = repository.findById(departmentId);
+//        Employee manager = es.findById(managerId);
+//        return p.map(department -> {
+//            department.setManager(manager);
+//            repository.save(department);
+//            return department;
+//        }).orElse(null);
+//    }
 
     public Department changeName(int departmentId, String newName){
         Optional<Department> p = repository.findById(departmentId);

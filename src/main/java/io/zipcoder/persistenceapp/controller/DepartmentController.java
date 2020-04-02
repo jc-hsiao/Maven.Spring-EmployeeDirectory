@@ -23,10 +23,10 @@ public class DepartmentController {
         return new ResponseEntity<>(service.create(d), HttpStatus.CREATED );
     }
 
-    @PutMapping( "/setManager" )
-    ResponseEntity<Department> setManager(@PathVariable int deptId, @PathVariable int empId){
-        return new ResponseEntity<>(service.setManager(deptId,empId), HttpStatus.CREATED );
-    }
+//    @PutMapping( "/setManager" )
+//    ResponseEntity<Department> setManager(@PathVariable int deptId, @PathVariable int empId){
+//        return new ResponseEntity<>(service.setManager(deptId,empId), HttpStatus.CREATED );
+//    }
 
     @GetMapping( "/all" )
     public ResponseEntity<Iterable<Department>> findAll() {
@@ -43,7 +43,7 @@ public class DepartmentController {
         return new ResponseEntity<>(service.update(id, info), HttpStatus.OK );
     }
 
-    @PutMapping( "/{id}" )
+    @PutMapping( "changeName/{id}" )
     ResponseEntity<Department> changeName(@PathVariable int id, @PathVariable String newName){
         return new ResponseEntity<>(service.changeName(id, newName), HttpStatus.OK );
     }
